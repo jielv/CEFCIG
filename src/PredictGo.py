@@ -17,7 +17,9 @@ stats = importr('stats')
 
 
 def preknown_cost(meta_df, train_df, real_table, columns, preknown_list, verbose=False):
+    train_df.to_csv('../test1/training_table.csv')
     cur_train_df = train_df[columns].copy()
+    cur_train_df.to_csv('../test1/cur_training_table.csv')
     cur_train_df = label_label(cur_train_df, meta_df)
     scaler = center_normalization(cur_train_df.iloc[:, :-1])
     cur_train_df.iloc[:, :-1] = preprocessing_table(scaler, cur_train_df.iloc[:, :-1])
@@ -28,7 +30,9 @@ def preknown_cost(meta_df, train_df, real_table, columns, preknown_list, verbose
             predictor.coef_[0][i] = -1
         elif columns[i].find('h3k27me3') != -1 and columns[i].find('kurtosis') != -1:
             predictor.coef_[0][i] = 1
+
     cur_real_table = real_table[columns].copy()
+
     cur_real_table = preprocessing_table(scaler, cur_real_table)
 
     result = predict_decision(predictor, cur_real_table)

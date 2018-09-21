@@ -104,17 +104,28 @@ class Gene:
     def get_total_signal(self, marker, start, end, height, step):
         self.update_cur_signal(marker, start, end, step)
         cur_values = self.cur_signal[marker]
-        return cur_values[1, cur_values[1, :] > height].sum() * step
+        if cur_values is None or len(cur_values) == 0 or len(cur_values[1, :]) == 0:
+            total_signal = 0
+        else:
+            total_signal = cur_values[1, cur_values[1, :] > height].sum() * step
+        return total_signal
 
     def get_total_width(self, marker, start, end, height, step):
         self.update_cur_signal(marker, start, end, step)
         cur_values = self.cur_signal[marker]
-        return cur_values[1, cur_values[1, :] > height].shape[0] * step
+        if cur_values is None or len(cur_values) == 0 or len(cur_values[1, :]) == 0:
+            total_width = 0
+        else:
+            total_width = cur_values[1, cur_values[1, :] > height].shape[0] * step
+        return total_width
 
     def get_height(self, marker, start, end, height, step):
         self.update_cur_signal(marker, start, end, step)
         cur_values = self.cur_signal[marker]
-        max_height = cur_values.max()
+        if cur_values is None or len(cur_values) == 0 or len(cur_values[1, :]) == 0:
+            max_height = 0
+        else:
+            max_height = cur_values[1, :].max()
         if max_height >= height:
             return max_height
         else:
@@ -123,17 +134,25 @@ class Gene:
     def get_kurtosis(self, marker, start, end, height, step):
         self.update_cur_signal(marker, start, end, step)
         cur_values = self.cur_signal[marker]
-        return peak_kurtosis(cur_values[:, cur_values[1, :] > height])
+        if cur_values is None or len(cur_values) == 0 or len(cur_values[1, :]) == 0:
+            return 0
+        else:
+            return peak_kurtosis(cur_values[:, cur_values[1, :] > height])
 
     def get_skewness(self, marker, start, end, height, step):
         self.update_cur_signal(marker, start, end, step)
         cur_values = self.cur_signal[marker]
-        # print cur_values
-        return peak_skewness(cur_values[:, cur_values[1, :] > height])
+        if cur_values is None or len(cur_values) == 0 or len(cur_values[1, :]) == 0:
+            return 0
+        else:
+            return peak_skewness(cur_values[:, cur_values[1, :] > height])
 
     def get_coverage(self, marker, start, end, height, step):
         self.update_cur_signal(marker, start, end, step)
         cur_values = self.cur_signal[marker]
-        total_width = cur_values[1, cur_values[1, :] > height].shape[0] * step
-        coverage = total_width*1./(end-start)
-        return coverage
+        if cur_values is None or len(cur_values) == 0 or len(cur_values[1, :]) == 0:
+            return 0
+        else:
+            total_width = cur_values[1, cur_values[1, :] > height].shape[0] * step
+            coverage = total_width*1./(end-start)
+            return coverage

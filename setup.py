@@ -32,25 +32,23 @@ def main():
           description="Computational Epigenetic Framework for Cell Identity Gene Discovery",
           author='Bo Xia',
           author_email='bxia@houstonmethodist.org',
-          include_package_data=True,
-          packages=find_packages(),  # include all packages under src
-          package_dir={'': 'src'},  # tell distutils packages are under src
-          package_data={
-              'data': ['*.pkl'],
-          },
-          license='MIT',
+          packages=find_packages(),
           scripts=['bin/CEFCIG',
                    ],
+          include_package_data=True,
+          package_data={
+              '': ['data/*.pkl'],
+          },
+          license='MIT',
           install_requires=[
-              'numpy>=1.13',
+              'numpy',
               'scipy',
               'pandas',
               'rpy2',
               'matplotlib',
-              'pickle',
-              'sklearn',
-              'traceback',
+              'sklearn'
           ],
+          data_files=[('', ['data/cignet_obj.pkl']),]
           )
 
 
