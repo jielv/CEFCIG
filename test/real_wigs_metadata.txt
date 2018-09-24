@@ -1,0 +1,5 @@
+cell_type	marker	path
+H1-hESC	H3K4me3	../wigs/H1-hESC_h3k4me3.qnor.wig
+H1-hESC	H3K4me1	../wigs/H1-hESC_h3k4me1.qnor.wig
+H1-hESC	H3K27me3	../wigs/H1-hESC_h3k27me3.qnor.wig
+H1-hESC	H3K27ac	../wigs/H1-hESC_h3k27ac.qnor.wig

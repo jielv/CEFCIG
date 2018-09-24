@@ -116,6 +116,33 @@ def gridgo():
             gene_obj = Gene(gene_id, cell_type, label, chr, start, end)
             gene_objs.append(gene_obj)
 
+        expression_path = args.gene_expression
+        if expression_path.endswith('.xlsx'):
+            expression = pd.read_excel(expression_path, index_col=0)
+            expression.index = expression.index.str.upper()
+        elif expression_path.endswith('.csv'):
+            expression = pd.read_csv(expression_path, index_col=0)
+            expression.index = expression.index.str.upper()
+        elif expression_path.endswith('.xls') or expression_path.endswith('.txt'):
+            expression = pd.read_csv(expression_path, sep='\t', index_col=0)
+            expression.index = expression.index.str.upper()
+        else:
+            expression = None
+
+        # print expression
+        expression = expression[~expression.index.duplicated(keep='first')]
+
+        for gene_obj in gene_objs:
+            if gene_obj.gene_id in expression.index:
+                cur_cols = [col for col in expression.columns if col.find(gene_obj.celltype) != -1]
+                if len(cur_cols) == 0:
+                    print gene_obj.celltype
+                else:
+                    cur_col = cur_cols[0]
+                gene_obj.exp = expression.ix[gene_obj.gene_id, cur_col]
+            else:
+                print gene_obj.gene_id
+
         wigs = {}
         for i in range(wigs_meta_df.shape[0]):
             cell_type, marker, wig_path = wigs_meta_df.iloc[i, 0], wigs_meta_df.iloc[i, 1], wigs_meta_df.iloc[i, 2]
@@ -133,15 +160,6 @@ def gridgo():
                 cur_wig_obj = wigs[cell_type][marker]
                 cur_signals[marker] = cur_wig_obj.genome[chr].get_signals(start, end)
             gene_obj.add_signal(cur_signals)
-
-        expression_path = args.gene_expression
-
-        expression = pd.read_csv(expression_path, sep='\t', index_col=0)
-        expression.index = expression.index.str.upper()
-        expression.columns = ['RNA_exp']
-        for gene_obj in gene_objs:
-            if gene_obj.gene_id in expression.index:
-                gene_obj.exp = expression.ix[gene_obj.gene_id, 'RNA_exp']
 
         output_dir = args.output_dir
         output_dir = output_dir if output_dir.endswith('/') else output_dir + '/'
@@ -204,6 +222,7 @@ def predictgo():
     print ''
 
     if args is not None:
+    # if True:
         gtf_path = args.gene_GTF
 
         if gtf_path.endswith('.xlsx'):
@@ -264,13 +283,26 @@ def predictgo():
             gene_obj.add_signal(cur_signals)
 
         expression_path = args.gene_expression
+        if expression_path.endswith('.xlsx'):
+            expression = pd.read_excel(expression_path, index_col=0)
+            expression.index = expression.index.str.upper()
+        elif expression_path.endswith('.csv'):
+            expression = pd.read_csv(expression_path, index_col=0)
+            expression.index = expression.index.str.upper()
+        elif expression_path.endswith('.xls') or expression_path.endswith('.txt'):
+            expression = pd.read_csv(expression_path, sep='\t', index_col=0)
+            expression.index = expression.index.str.upper()
+        else:
+            expression = None
 
-        expression = pd.read_csv(expression_path, sep='\t', index_col=0)
+        expression = expression[~expression.index.duplicated(keep='first')]
+
         expression.index = expression.index.str.upper()
         expression.columns = ['RNA_exp']
         for gene_obj in gene_objs:
             if gene_obj.gene_id in expression.index:
                 gene_obj.exp = expression.ix[gene_obj.gene_id, 'RNA_exp']
+
 
         gridgo_obj_path = args.gridgo_obj
         gridgo_obj = load_obj(gridgo_obj_path)
@@ -296,6 +328,9 @@ def predictgo():
         output_dir = output_dir if output_dir.endswith('/') else output_dir + '/'
 
         save_obj(predict_obj, output_dir + '/predictGo.pkl')
+
+        # output_dir = '../test1/'
+        # predict_obj = load_obj('../test1/predictGo.pkl')
 
         predict_obj.predict()
 
@@ -336,16 +371,27 @@ def cignet():
     print ''
 
     if args is not None:
-        cignet_obj = load_obj('../pkl/cignet_obj.pkl')
+        cignet_obj = load_obj('../data/cignet_obj.pkl')
         predictor, scaler, CellNet, features = cignet_obj
 
         CIG_prediction_result_path = args.predictgo_prediction_result_table
         CIG_prediction_result = pd.read_csv(CIG_prediction_result_path, index_col=0)
 
         expression_path = args.gene_expression
-        expression = pd.read_csv(expression_path, sep='\t', index_col=0)
-        expression.index = expression.index.str.upper()
+        if expression_path.endswith('.xlsx'):
+            expression = pd.read_excel(expression_path, index_col=0)
+            expression.index = expression.index.str.upper()
+        elif expression_path.endswith('.csv'):
+            expression = pd.read_csv(expression_path, index_col=0)
+            expression.index = expression.index.str.upper()
+        elif expression_path.endswith('.xls') or expression_path.endswith('.txt'):
+            expression = pd.read_csv(expression_path, sep='\t', index_col=0)
+            expression.index = expression.index.str.upper()
+        else:
+            expression = None
+
         expression.columns = ['RNA_exp']
+        expression = expression[~expression.index.duplicated(keep='first')]
 
         CigNet_obj = CigNet(predictor, scaler, CellNet, features, CIG_prediction_result, expression)
         prediction_result = CigNet_obj.prediction_result
@@ -371,3 +417,5 @@ if __name__ == "__main__":
         print 'Computational Epigenetic Framework for Cell Identity Gene Discovery (CEFCIG)\n'
         print 'For a list of functions in CEFCIG, please try:\nCEFCIG -h'
         print 'Kaifu Chen, et al. chenkaifu@gmail.com, Chen lab, Cardiovascular department, Houston methodist.'
+
+    # predict_obj = load_obj('../test1/predictGo.pkl')

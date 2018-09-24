@@ -51,6 +51,7 @@ class GridGo:
         self.table['gene_id'] = gene_ids
         self.table['cell_type'] = celltypes
         self.table['RNA_exp'] = expressions
+        # print self.table
 
     @staticmethod
     def next_grid(all_range, range_step, cur_step, cur_center, reduction_step, step_limit, search):
