@@ -21,6 +21,7 @@ def main():
           author='Bo Xia',
           author_email='bxia@houstonmethodist.org',
           packages=find_packages(),
+          url='https://github.com/bxia888/CEFCIG/',
           scripts=['src/CEFCIG',
                    ],
           include_package_data=True,
