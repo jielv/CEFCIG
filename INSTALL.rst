@@ -9,13 +9,7 @@ Prerequisites
 
 Python version must be equal to *2.7* to run CEFCIG.
 
-Numpy
-Scipy
-Pandas
-rpy2
-matplotlib
-sklearn
-seaborn
+Numpy, Scipy, Pandas, rpy2, matplotlib, sklearn, seaborn
 
 Install from source
 ===================
@@ -45,6 +39,5 @@ Add CEFCIG_PATH to your PATH environment variable.
  $ export PATH=/CEFCIG_PATH/src:$PATH
 
 --
-Bo Xia <bxia@houstonmethodist.org>
-Kaifu Chen <kchen2@houstonmethodist.org>
+Bo Xia <bxia@houstonmethodist.org>, Kaifu Chen <kchen2@houstonmethodist.org>
 
