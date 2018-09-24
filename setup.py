@@ -21,11 +21,11 @@ def main():
           author='Bo Xia',
           author_email='bxia@houstonmethodist.org',
           packages=find_packages(),
-          scripts=['bin/CEFCIG',
+          scripts=['src/CEFCIG',
                    ],
           include_package_data=True,
           package_data={
-              '': ['data/*.pkl'],
+              '': ['data/*.pkl', 'test/*.txt'],
           },
           license='MIT',
           install_requires=[
@@ -34,7 +34,9 @@ def main():
               'pandas',
               'rpy2',
               'matplotlib',
-              'sklearn'
+              'sklearn',
+              'seaborn'
+
           ],
           data_files=[('', ['data/cignet_obj.pkl']),]
           )
